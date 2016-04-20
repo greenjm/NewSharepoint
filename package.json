@@ -1,0 +1,26 @@
+{
+  "name": "newsharepoint",
+  "version": "1.0.0",
+  "description": "CS433 project",
+  "main": "app.js",
+  "dependencies": {
+    "express": "~4.0.0",
+    "mongodb": "^2.1.16",
+    "ejs": "~1.0.0",
+    "aerospike": "*"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/greenjm/NewSharepoint.git"
+  },
+  "bugs": {
+    "url": "https://github.com/greenjm/NewSharepoint/issues"
+  },
+  "homepage": "https://github.com/greenjm/NewSharepoint#readme"
+}
