@@ -7,7 +7,7 @@
     "express": "~4.0.0",
     "mongodb": "^2.1.16",
     "ejs": "~1.0.0",
-    "aerospike": "*",
+    "aerospike": "^1.0.7",
     "http": "*"
   },
   "devDependencies": {},
