@@ -7,7 +7,7 @@ $(document).ready(function() {
 				url: '/aerospike/testRoute',
 				type: 'GET',
 				success: function(data) {
-					console.log("Success! Data is: " + data);
+					console.log("Success! Data is: " + data["name"]);
 				},
 				error: function(data) {
 					console.log("Error! Data is: " + data);

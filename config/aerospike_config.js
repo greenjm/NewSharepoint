@@ -10,6 +10,6 @@ exports.aerospikeConfig = function()    {
 exports.aerospikeDBParams = function()  {
  	return {
     	defaultNamespace: 'test',
-    	defaultSet: 'test'
+    	defaultSet: 'demo'
  	};
 };
