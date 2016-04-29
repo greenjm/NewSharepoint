@@ -1,0 +1,23 @@
+body {
+	background-color: rgb(128, 0, 0);
+}
+
+.form-header {
+	text-align: center;
+	color: white;
+}
+
+label {
+	color: white;
+}
+
+.container {
+	width: 25%;
+	position: absolute;
+	top: 40%;
+  	left: 50%;
+  	transform: translate(-50%, -50%);
+  	background-color: #404040;
+  	box-shadow: 5px 5px 5px #101010;
+  	border-radius: 20px;
+}
