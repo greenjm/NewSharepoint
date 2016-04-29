@@ -2,11 +2,56 @@
 <head>
 	<!-- Stylesheets -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<link rel="stylesheet" href="./styles/plugins/content-filter.css">
 	<link rel="stylesheet" href="./styles/forum.css">
 	<!-- Javascripts -->
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 	<script type="text/javascript" src="./scripts/header.js"></script>
+	<script type="text/javascript" src="./scripts/plugins/modernizr.js"></script>
+	<script type="text/javascript" src="./scripts/plugins/jquery.mixitup.min.js"></script>
+	<script type="text/javascript" src="./scripts/plugins/content-filter.js"></script>
 </head>
 <body>
 	<div id="header"></div>
+
+	<header class="cd-header">
+		<h1>Latest Posts</h1>
+	</header>
+ 
+	<main class="cd-main-content">
+		<div class="cd-tab-filter-wrapper">
+			<div class="cd-tab-filter">
+				<ul class="cd-filters">
+					<li class="placeholder"></li>
+				</ul>
+			</div>
+		</div>
+ 
+		<section class="cd-gallery">
+			<ul>
+				<li class="mix color-1 check1 radio2 option3"><img src="img/img-1.jpg" alt="Image 1"></li>
+				<li class="mix color-2 check2 radio2 option2"><img src="img/img-2.jpg" alt="Image 2"></li>
+				<li><!-- ... --></li>
+				<li class="gap"></li>
+			</ul>
+			<div class="cd-fail-message">No results found</div>
+		</section> <!-- cd-gallery -->
+ 
+		<div class="cd-filter">
+			<form>
+				<div class="cd-filter-block">
+					<h4>Filter Posts</h4>
+				
+					<div class="cd-filter-content">
+					<!-- filter content -->
+					</div> <!-- cd-filter-content -->
+				</div> <!-- cd-filter-block -->
+			</form>
+ 
+			<a href="#0" class="cd-close">Close</a>
+		</div> <!-- cd-filter -->
+ 
+		<a href="#0" class="cd-filter-trigger">Filters</a>
+
+	</main> <!-- cd-main-content -->
 </body>
