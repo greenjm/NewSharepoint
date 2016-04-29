@@ -3,6 +3,12 @@
   <head>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
     <script type="text/javascript" src="./scripts/header.js"></script>
+    <script src="https://cdn.tinymce.com/4/tinymce.min.js"></script>
+    <script>
+      tinymce.init({
+      selector: '#mytextarea'
+      });
+    </script>
     <title>Add Post</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
   </head>
@@ -10,5 +16,45 @@
     <div id="header"></div>
     <div id=Title>
       <h1>Add a New Post to Rosepoint</h1>
+    </div>
+    <div class="container">
+      <form class="form-horizontal">
+        <div class="form-group">
+            <h3>Post Title</h3>
+              <div class="input-group">
+                <input type="text" class="form-control" placeholder="Title" aria-describedby="basic-addon1">
+              </div>
+            <h3>Post Body</h3>
+              <form method="post">
+                <textarea id="mytextarea"></textarea>
+              </form>
+            <h3>Post Tags</h3>
+
+            <div class="row">
+              <div class="form-group">
+                <div class="input-group">
+                  <span class="input-group-addon">
+                    <input value="sell" type="radio" name="tag" checked>Selling
+                  </span>
+                  <span class="input-group-addon">
+                    <input value="buy" type="radio" name="tag">Buying
+                  </span>
+                  <span class="input-group-addon">
+                    <input value="lor" type="radio" name="tag">Looking for Ride
+                  </span>
+                  <span class="input-group-addon">
+                    <input value="ofr" type="radio" name="tag">Offering Ride
+                  </span>
+                  <span class="input-group-addon">
+                    <input value="laf" type="radio" name="tag">Lost &amp; Found
+                  </span>
+                  <span class="input-group-addon">
+                    <input value="misc" type="radio" name="tag">Miscelleanous
+                  </span>
+                </div>
+              </div>
+            </div>
+        </div>
+      </form>
     </div>
 </html>
