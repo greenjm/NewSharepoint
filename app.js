@@ -1,10 +1,9 @@
 var express = require("express");
 var http = require("http");
-var asApi = require("./as_api");
 var app = express();
 
 require("./router/routes")(app);
-require("./router/aerospike_routes")(app, asApi);
+require("./router/aerospike_routes")(app);
 app.use(express.static("public"));
 app.set("views", __dirname + "/views");
 app.set("view engine", "ejs");
