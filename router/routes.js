@@ -14,4 +14,8 @@ module.exports = function(app) {
   app.get("/add", function(req, res) {
     res.render("addpost.html");
   });
+
+	app.get("/forum", function(req, res) {
+		res.render("forum.html");
+	});
 }
