@@ -10,4 +10,8 @@ module.exports = function(app) {
 	app.get("/user", function(req, res) {
 		res.render("user.html");
 	});
+
+  app.get("/add", function(req, res) {
+    res.render("addpost.html");
+  });
 }
