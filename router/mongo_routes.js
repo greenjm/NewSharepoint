@@ -37,4 +37,8 @@ module.exports = function(app) {
 		});
 		newPost.save();
 	});
+
+	app.get("/mongo/getPosts", urlencodedParser, function(req, res) {
+		Post.find({}, function(err, post){});
+	})
 }
