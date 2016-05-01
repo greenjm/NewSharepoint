@@ -4,13 +4,13 @@
   "description": "CS433 project",
   "main": "app.js",
   "dependencies": {
+    "mongoose": "*",
     "aerospike": "^1.0.7",
     "body-parser": "^1.15.0",
     "ejs": "~1.0.0",
     "express": "~4.0.0",
     "firebase": "*",
-    "http": "*",
-    "mongodb": "^2.1.16"
+    "http": "*"
   },
   "devDependencies": {},
   "scripts": {

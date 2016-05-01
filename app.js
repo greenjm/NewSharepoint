@@ -2,8 +2,10 @@ var express = require("express");
 var http = require("http");
 var app = express();
 
-require("./router/routes")(app);
+//require("./router/routes")(app);
 require("./router/aerospike_routes")(app);
+require("./router/mongo_routes")(app);
+require("./router/routes")(app);
 app.use(express.static("public"));
 app.set("views", __dirname + "/views");
 app.set("view engine", "ejs");
