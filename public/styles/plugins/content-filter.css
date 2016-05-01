@@ -21,12 +21,12 @@ html * {
 body {
   font-size: 1.6rem;
   font-family: "Open Sans", sans-serif;
-  color: #331d35;
+  color: #800000;
   background-color: #e7e7e7;
 }
 
 a {
-  color: #41307c;
+  color: #800000;
   text-decoration: none;
 }
 
@@ -38,7 +38,7 @@ Main Components
 .cd-header {
   position: relative;
   height: 150px;
-  background-color: #331d35;
+  background-color: #800000;
 }
 .cd-header h1 {
   color: #ffffff;
@@ -348,7 +348,7 @@ xfilter
   left: 0;
   height: 50px;
   width: 100%;
-  background-color: #41307c;
+  background-color: #404040;
   z-index: 2;
 }
 .cd-filter form {
@@ -364,7 +364,7 @@ xfilter
   color: #ffffff;
   font-size: 1.3rem;
   text-align: center;
-  background: #37296a;
+  background: #404040;
   opacity: 0;
   -webkit-transition: opacity 0.3s;
   -moz-transition: opacity 0.3s;
@@ -372,7 +372,7 @@ xfilter
   z-index: 3;
 }
 .no-touch .cd-filter .cd-close:hover {
-  background: #32255f;
+  background: #393939;
 }
 .cd-filter.filter-is-visible {
   -webkit-transform: translateX(0);
@@ -428,7 +428,7 @@ xfilter
     transition: color 0.3s;
   }
   .no-touch .cd-filter-trigger:hover {
-    color: #41307c;
+    color: #404040;
   }
   .cd-filter-trigger.filter-is-visible, .cd-filter-trigger.filter-is-visible:hover {
     color: #ffffff;
