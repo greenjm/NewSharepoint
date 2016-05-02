@@ -2,6 +2,7 @@ module.exports = function(app) {
 	var http = require("http");
 
 	var mongoose = require('mongoose');
+	var cookieParser = require("cookie-parser");
 	var Schema = mongoose.Schema;
 
 	var bodyParser = require("body-parser");
@@ -15,7 +16,8 @@ module.exports = function(app) {
 
 	var PostSchema = new Schema({
 		title: String,
-		content: String
+		content: String,
+		user: String
 	});
 
 	var Post = mongoose.model("Posts", PostSchema);
@@ -34,8 +36,10 @@ module.exports = function(app) {
 		var newPost = new Post({
 			title: req.body.title,
 			content: req.body.content,
+			user: req.cookies.currentUser
 		});
 		newPost.save();
+		res.send("Complete");
 	});
 
 	app.get("/mongo/getPosts", urlencodedParser, function(req, res) {

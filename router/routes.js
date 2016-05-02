@@ -43,6 +43,14 @@ module.exports = function(app) {
 		}
 	});
 
+	app.get("/currentUser", function(req, res) {
+		if (req.cookies.currentUser === undefined) {
+			res.redirect("/login");
+		} else {
+			res.send(req.cookies.currentUser);
+		}
+	})
+
 	//POST
 	app.post("/login/firebase", urlencodedParser, function(req, res) {
 		var email = req.body.email;

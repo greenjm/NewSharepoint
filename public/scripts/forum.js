@@ -3,7 +3,7 @@ $(document).ready(function() {
 	var templatePost = function(post) {
 		return "<div class='mix color-1 check1 radio2 option3'>\
           <p>Title: " + post.title + "</p>\
-          <p>User:</p>\
+          <p>User: " + post.user + "</p>\
           <p>Body: " + post.content + "</p>\
           <p>Date Posted: 1 May 2016</p>\
           <p>Tag:</p>\

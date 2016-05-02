@@ -23,6 +23,7 @@ $(document).ready(function() {
 				data: post,
 				success: function(data) {
 					console.log("Success!");
+					window.location = "/forum";
 				},
 				error: function(data) {
 					console.log("Error");
