@@ -3,6 +3,10 @@ module.exports = function(app) {
 
 	var mongoose = require('mongoose');
 	var Schema = mongoose.Schema;
+
+	var bodyParser = require("body-parser");
+	var urlencodedParser = bodyParser.urlencoded({ extended: false });
+
 	//Lets connect to our database using the DB server URL.
 	mongoose.connect('mongodb://137.112.40.131:27017/');
 
@@ -10,21 +14,31 @@ module.exports = function(app) {
 	}).listen(8081);
 
 	var PostSchema = new Schema({
+		title: String,
 		content: String
 	});
 
 	var Post = mongoose.model("Posts", PostSchema);
 
-	var blah = new Post({
-		content: "Stuff"
-	})
+	//var blah = new Post({
+	//	content: "Stuff"
+	//})
 
-	blah.save();
+	//blah.save();
 
-	app.get("/mongo/addPost", function(data) {
+	app.post("/mongo/addPost", urlencodedParser, function(req, res) {
 		//blah.save(function(err){});
 		//Post.find({}, function(err, post) {
-			console.log(data);
-		//});
+			console.log(req.body.title);
+			console.log(req.body.content);
+		var newPost = new Post({
+			title: req.body.title,
+			content: req.body.content,
+		});
+		newPost.save();
 	});
+
+	app.get("/mongo/getPosts", urlencodedParser, function(req, res) {
+		Post.find({}, function(err, post){});
+	})
 }
