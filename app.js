@@ -1,8 +1,10 @@
 var express = require("express");
 var http = require("http");
+var cookieParser = require("cookie-parser");
 var app = express();
 
 //require("./router/routes")(app);
+app.use(cookieParser());
 require("./router/aerospike_routes")(app);
 require("./router/mongo_routes")(app);
 require("./router/routes")(app);

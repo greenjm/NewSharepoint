@@ -1,13 +1,18 @@
 module.exports = function(app) {
 	var Firebase = require("firebase");
 	var bodyParser = require("body-parser");
+	var cookieParser = require("cookie-parser");
 	var ref = new Firebase("https://newsharepoint.firebaseio.com/");
 
 	var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 	// GET
 	app.get("/", function(req, res) {
-		res.render("index.html");
+		if (req.cookies.currentUser === undefined) {
+			res.redirect("/login");
+		} else {
+			res.render("forum.html");
+		}
 	});
 
 	app.get("/login", function(req, res) {
@@ -15,15 +20,27 @@ module.exports = function(app) {
 	});
 
 	app.get("/user", function(req, res) {
-		res.render("user.html");
+		if (req.cookies.currentUser === undefined) {
+			res.redirect("/login");
+		} else {
+			res.render("user.html");
+		}
 	});
 
   	app.get("/add", function(req, res) {
-    	res.render("addpost.html");
+    	if (req.cookies.currentUser === undefined) {
+			res.redirect("/login");
+		} else {
+			res.render("addpost.html");
+		}
   	});
 
 	app.get("/forum", function(req, res) {
-		res.render("forum.html");
+		if (req.cookies.currentUser === undefined) {
+			res.redirect("/login");
+		} else {
+			res.render("forum.html");
+		}
 	});
 
 	//POST
@@ -39,7 +56,7 @@ module.exports = function(app) {
 			if (error) {
     			res.status(400).send(error);
   			} else {
-    			res.status(200).send(authData);
+  				res.cookie("currentUser", authData.password.email).send("set current user");
   			}
 		});
 	});

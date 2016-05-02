@@ -18,6 +18,7 @@ $(document).ready(function() {
 			data: data,
 			success: function(data) {
 				console.log("SUCCESS: " + data);
+				window.location = "/forum";
 			},
 			error: function(data) {
 				console.log("ERROR: " + data);
