@@ -15,15 +15,15 @@
       <h1>Add a New Post to Rosepoint</h1>
     </div>
     <div class="container">
-      <form class="form-horizontal">
+      <form class="form-horizontal" name="addPostForm">
         <div class="form-group">
             <h3>Post Title</h3>
               <div class="input-group">
-                <input id = "postTitle" type="text" class="form-control" placeholder="Title" aria-describedby="basic-addon1">
+                <input id = "postTitle" name="postTitleName" type="text" class="form-control" placeholder="Title" aria-describedby="basic-addon1">
               </div>
             <h3>Post Body</h3>
               <form method="post">
-                <textarea id="mytextarea"></textarea>
+                <textarea id="mytextarea" name="postContentName"></textarea>
               </form>
             <h3>Post Tags</h3>
               <div class="row">

@@ -17,20 +17,34 @@ $(document).ready(function() {
 				content: tempContents
 			};
 
-			$.ajax({
-				url: '/mongo/addPost',
-				type: 'POST',
-				data: post,
-				success: function(data) {
-					console.log("Success!");
-					window.location = "/forum";
-				},
-				error: function(data) {
-					console.log("Error");
-				}
-			});
-			
+			if (checkFields()) {
+				$.ajax({
+					url: '/mongo/addPost',
+					type: 'POST',
+					data: post,
+					success: function(data) {
+						console.log("Success!");
+						window.location = "/forum";
+					},
+					error: function(data) {
+						console.log("Error");
+					}
+				});
+			}
 		});
+	}
+
+	var checkFields = function() {
+		var postTitleField = document.forms["addPostForm"]["postTitleName"].value;
+    	var postContentField = document.forms["addPostForm"]["postContentName"].value;
+    	console.log(postTitleField);
+    	console.log(postContentField);
+
+    	if (postContentField == "" || postTitleField == "") {
+    		alert("There are Empty Fields!")
+    		return false;
+    	}
+    	return true;
 	}
 
 	addEventListeners();
