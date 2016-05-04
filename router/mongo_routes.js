@@ -1,4 +1,4 @@
-module.exports = function(app) {
+module.exports = function(app, io) {
 	var http = require("http");
 
 	var mongoose = require('mongoose');
@@ -42,6 +42,7 @@ module.exports = function(app) {
 			tag: req.body.tag
 		});
 		newPost.save();
+		io.sockets.emit("post added", newPost);
 		res.send("Complete");
 	});
 
@@ -50,4 +51,6 @@ module.exports = function(app) {
     		return res.end(JSON.stringify(post));
 		});
 	});
+
+	//});
 }

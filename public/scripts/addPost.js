@@ -1,8 +1,10 @@
 $(document).ready(function() {
 
-      tinymce.init({
-      selector: '#mytextarea'
-      });
+	var socket = io();
+
+    tinymce.init({
+    	selector: '#mytextarea'
+    });
 	
 
 	var $title = $('#postTitle');
@@ -23,14 +25,13 @@ $(document).ready(function() {
       return '';
       };
 		$("#submitPost").on("click", function() {
-			console.log("STUFF" + tinymce.activeEditor.getContent());
 			var tempContents = tinymce.activeEditor.getContent();
 			var post = {
 				title: $title.val(),
 				content: tempContents,
         tag: ptag_value
 			};
-
+			
 			if (tempContents != "" || post.title != "") {
 				$.ajax({
 					url: '/mongo/addPost',
@@ -38,6 +39,7 @@ $(document).ready(function() {
 					data: post,
 					success: function(data) {
 						console.log("Success!");
+						socket.emit("post added", post);
 						window.location = "/forum";
 					},
 					error: function(data) {
