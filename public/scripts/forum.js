@@ -6,7 +6,7 @@ $(document).ready(function() {
           <p>User: " + post.user + "</p>\
           <p>Body: " + post.content + "</p>\
           <p>Date Posted: 1 May 2016</p>\
-          <p>Tag:</p>\
+          <p>Tag: " + post.tag + "</p>\
         </div>";
 	}
 
