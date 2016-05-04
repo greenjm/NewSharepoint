@@ -22,6 +22,10 @@ module.exports = function(app) {
 	    }
 	});
 
+	app.post("/aerospike/addPostFilter", function(req, res) {
+		
+	});
+
 	app.get("/aerospike/testRoute", function(req, res) {
 		var uid = 0;
 		var key = aerospike.key("test", "demo", uid);

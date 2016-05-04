@@ -1,4 +1,28 @@
 module.exports = function(app, io) {
+
+	var aerospike = require("aerospike");
+	var client = aerospike.client({
+	  hosts: [
+	      { addr: "137.112.40.132", port: 3000 }
+	  ],
+	  log: {
+	      level: aerospike.log.INFO
+	  }
+	});
+
+	client.connect(function (response) {
+	    if ( response.code === 0) {
+	        // handle success
+	        console.log("\nConnection to Aerospike cluster succeeded!\n");
+	    }
+	    else {
+	        // handle failure
+	        console.log("\nConnection to Aerospike cluster failed!\n");
+	        console.log(response);
+	    }
+	});
+
+
 	var http = require("http");
 
 	var mongoose = require('mongoose');
@@ -7,6 +31,8 @@ module.exports = function(app, io) {
 
 	var bodyParser = require("body-parser");
 	var urlencodedParser = bodyParser.urlencoded({ extended: false });
+
+
 
 	//Lets connect to our database using the DB server URL.
 	mongoose.connect('mongodb://137.112.40.131:27017/');
@@ -41,9 +67,18 @@ module.exports = function(app, io) {
 			user: req.cookies.currentUser,
 			tag: req.body.tag
 		});
-		newPost.save();
+		newPost.save(function(err, post) {
+			// get id of post
+			//get tag of post
+			//put into correct filter table
+		});
 		io.sockets.emit("post added", newPost);
+
+		
+			
 		res.send("Complete");
+
+		
 	});
 
 	app.get("/mongo/getPosts", urlencodedParser, function(req, res) {

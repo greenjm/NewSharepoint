@@ -46,6 +46,10 @@ $(document).ready(function() {
 						console.log("Error");
 					}
 				});
+        $.ajax({
+          url: '/aerospike/addPostFilter',
+          type: 'POST',
+          data: post.});
 			} else{
 				alert("There are Empty Fields!")
 			}

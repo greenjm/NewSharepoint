@@ -6,7 +6,6 @@ var io = require("socket.io");
 
 //require("./router/routes")(app);
 app.use(cookieParser());
-require("./router/aerospike_routes")(app);
 require("./router/routes")(app);
 app.use(express.static("public"));
 app.set("views", __dirname + "/views");
@@ -20,4 +19,4 @@ server.listen(5000, function() {
 
 var listener = io.listen(server);
 require("./router/socketio")(listener);
-require("./router/mongo_routes")(app, listener);
+require("./router/database_routes")(app, listener);
