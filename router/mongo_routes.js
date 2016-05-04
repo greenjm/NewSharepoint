@@ -17,7 +17,8 @@ module.exports = function(app) {
 	var PostSchema = new Schema({
 		title: String,
 		content: String,
-		user: String
+		user: String,
+		tag: String
 	});
 
 	var Post = mongoose.model("Posts", PostSchema);
@@ -33,10 +34,12 @@ module.exports = function(app) {
 		//Post.find({}, function(err, post) {
 			console.log(req.body.title);
 			console.log(req.body.content);
+			console.log(req.body.tag);
 		var newPost = new Post({
 			title: req.body.title,
 			content: req.body.content,
-			user: req.cookies.currentUser
+			user: req.cookies.currentUser,
+			tag: req.body.tag
 		});
 		newPost.save();
 		res.send("Complete");
