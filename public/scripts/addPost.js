@@ -17,8 +17,8 @@ $(document).ready(function() {
 				title: $title.val(),
 				content: tempContents
 			};
-
-			if (true) {
+			
+			if (tempContents != "" || post.title != "") {
 				$.ajax({
 					url: '/mongo/addPost',
 					type: 'POST',
@@ -32,21 +32,10 @@ $(document).ready(function() {
 						console.log("Error");
 					}
 				});
+			} else{
+				alert("There are Empty Fields!")
 			}
 		});
-	}
-
-	var checkFields = function() {
-		var postTitleField = document.forms["addPostForm"]["postTitleName"].value;
-    	var postContentField = document.forms["addPostForm"]["postContentName"].value;
-    	console.log(postTitleField);
-    	console.log(postContentField);
-
-    	if (postContentField == "" || postTitleField == "") {
-    		alert("There are Empty Fields!")
-    		return false;
-    	}
-    	return true;
 	}
 
 	addEventListeners();
