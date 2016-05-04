@@ -17,8 +17,8 @@ module.exports = function(app, io) {
 	var PostSchema = new Schema({
 		title: String,
 		content: String,
-		id: Number,
-		more: String,
+		user: String,
+		tag: String
 	});
 
 	var Post = mongoose.model("Posts", PostSchema);
@@ -29,14 +29,17 @@ module.exports = function(app, io) {
 
 	//blah.save();
 
-	//io.sockets.on("connection", function(socket) {
-
-	app.post("/mongo/addPost", urlencodedParser, function (req, res) {
+	app.post("/mongo/addPost", urlencodedParser, function(req, res) {
+		//blah.save(function(err){});
+		//Post.find({}, function(err, post) {
+			console.log(req.body.title);
+			console.log(req.body.content);
+			console.log(req.body.tag);
 		var newPost = new Post({
 			title: req.body.title,
 			content: req.body.content,
-			id: 5,
-			more: "Stuff"
+			user: req.cookies.currentUser,
+			tag: req.body.tag
 		});
 		newPost.save();
 		io.sockets.emit("post added", newPost);

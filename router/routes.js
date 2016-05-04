@@ -43,6 +43,14 @@ module.exports = function(app) {
 		}
 	});
 
+	app.get("/message", function(req, res) {
+		if (req.cookies.currentUser === undefined) {
+			res.redirect("/login");
+		} else {
+			res.render("message.html");
+		}
+	});
+
 	app.get("/currentUser", function(req, res) {
 		if (req.cookies.currentUser === undefined) {
 			res.redirect("/login");
