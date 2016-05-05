@@ -10,7 +10,7 @@ $(document).ready(function() {
 	}
 
 	var templatePost = function(post) {
-		return "<div class='mix " + post.tag + "' data-id='" + post.id + "'>\
+		return "<div class='mix " + post.ptag + "' data-id='" + post.id + "'>\
           <p>Title: " + post.title + "</p>\
           <p>User: " + post.user + "</p>\
           <p>Body: " + post.content + "</p>\
@@ -22,6 +22,7 @@ $(document).ready(function() {
 		for (var i = 0; i < posts.length; i++) {
 			var post = posts[i];
 			var html = templatePost(post);
+			console.log("html: " + html);
 			$(".cd-gallery ul").mixItUp("append", $(html));
 		}
 	}
