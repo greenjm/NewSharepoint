@@ -49,7 +49,7 @@ $(document).ready(function() {
         $.ajax({
           url: '/aerospike/addPostFilter',
           type: 'POST',
-          data: post.});
+          data: post});
 			} else{
 				alert("There are Empty Fields!")
 			}
