@@ -32,18 +32,19 @@ module.exports = function(app, io) {
 	app.post("/mongo/addPost", urlencodedParser, function(req, res) {
 		//blah.save(function(err){});
 		//Post.find({}, function(err, post) {
-			console.log(req.body.title);
-			console.log(req.body.content);
-			console.log(req.body.tag);
+		//	console.log(req.body.title);
+		//	console.log(req.body.content);
+		//	console.log(req.body.tag);
 		var newPost = new Post({
 			title: req.body.title,
 			content: req.body.content,
 			user: req.cookies.currentUser,
 			tag: req.body.tag
 		});
-		newPost.save();
-		io.sockets.emit("post added", newPost);
-		res.send("Complete");
+		newPost.save(function (err, post) {
+			io.sockets.emit("post added", newPost);
+			res.send("Complete");
+		});
 	});
 
 	app.get("/mongo/getPosts", urlencodedParser, function(req, res) {
