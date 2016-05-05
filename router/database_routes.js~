@@ -67,14 +67,25 @@ module.exports = function(app, io) {
 			user: req.cookies.currentUser,
 			tag: req.body.tag
 		});
-
-		newPost.save(function (err, post) {
-			io.sockets.emit("post added", newPost);
-			res.send("Complete");
+<<<<<<< HEAD:router/database_routes.js
+		newPost.save(function(err, post) {
 			// get id of post
 			//get tag of post
 			//put into correct filter table
 		});
+		io.sockets.emit("post added", newPost);
+
+		
+			
+		res.send("Complete");
+
+		
+=======
+		newPost.save(function (err, post) {
+			io.sockets.emit("post added", newPost);
+			res.send("Complete");
+		});
+>>>>>>> e39919b03ea9fdb5e0bf3b9d46a39ddfbaa93d50:router/mongo_routes.js
 	});
 
 	app.get("/mongo/getPosts", urlencodedParser, function(req, res) {

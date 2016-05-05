@@ -9,6 +9,11 @@ $(document).ready(function() {
 			console.log("html: " + html);
 			$(".cd-gallery ul").mixItUp("prepend", $(html));
 		});
+
+		socket.on("post added", function(post) {
+			var html = templatePost(post);
+			$(".cd-gallery ul").mixItUp("prepend", $(html));
+		});
 	}
 
 	var templatePost = function(post) {

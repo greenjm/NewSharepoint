@@ -43,13 +43,25 @@ module.exports = function(app) {
 		}
 	});
 
+	app.get("/message", function(req, res) {
+		if (req.cookies.currentUser === undefined) {
+			res.redirect("/login");
+		} else {
+			res.render("message.html");
+		}
+	});
+
 	app.get("/currentUser", function(req, res) {
 		if (req.cookies.currentUser === undefined) {
 			res.redirect("/login");
 		} else {
 			res.send(req.cookies.currentUser);
 		}
-	})
+	});
+
+	app.get("/register", function(req, res) {
+		res.render("register.html");
+	});
 
 	//POST
 	app.post("/login/firebase", urlencodedParser, function(req, res) {
@@ -66,6 +78,25 @@ module.exports = function(app) {
   			} else {
   				res.cookie("currentUser", authData.password.email).send("set current user");
   			}
+		});
+	});
+
+	app.post("/register/firebase", urlencodedParser, function(req, res) {
+		var email = req.body.email;
+		var password = req.body.password;
+		var confirm = req.body.confirm;
+
+		if (email == "" || password == "" || password != confirm) {
+			res.status(400).send("Either email or password is blank");
+		}
+
+		ref.createUser({"email": email, "password": password}, function(error, userData) {
+			if (error) {
+				console.log("error: " + error);
+				res.status(400).send(error);
+			} else {
+				res.status(200).send("Created user");
+			}
 		});
 	});
 }

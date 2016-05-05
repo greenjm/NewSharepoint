@@ -1,21 +1,23 @@
 $(document).ready(function() {
 	
-	var tryLogin = function() {
+	var tryRegister = function() {
 		var email = $("#email").val();
 		var password = $("#pass").val();
+		var confirm = $("#confirm-pass").val();
 
 		var data = {
 			email: email,
-			password: password
+			password: password,
+			confirm: confirm
 		};
 
 		$.ajax({
-			url: "/login/firebase",
+			url: "/register/firebase",
 			type: "POST",
 			data: data,
 			success: function(data) {
 				console.log("SUCCESS: " + data);
-				window.location = "/forum";
+				window.location = "/login";
 			},
 			error: function(data) {
 				console.log("ERROR: " + data);
@@ -23,12 +25,8 @@ $(document).ready(function() {
 		})
 	}
 
-	$("#sign-in").on("click", function() {
-		tryLogin();
+	$("#sign-up").on("click", function() {
+		tryRegister();
 	});
-
-	$("#register").on("click", function() {
-		window.location = "/register";
-	})
 
 });
