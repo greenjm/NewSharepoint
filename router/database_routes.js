@@ -78,8 +78,30 @@ module.exports = function(app, io) {
 	});
 
 	app.get("/mongo/getPosts", urlencodedParser, function(req, res) {
-		Post.find().lean().exec(function (err, post) {
-    		return res.end(JSON.stringify(post));
+		Post.find().lean().exec(function (err, posts) {
+			var result = [];
+			for (var post in posts) {
+				var data = {
+					id: post.id,
+					title: post.title,
+					content: post.content,
+					user: post.user
+				}
+
+				var key = aerospike.key("test", "demo", data.id);
+				client.get(key, function(err, record, metadata, key) {
+					switch (err.code) {
+			        case aerospike.status.AEROSPIKE_OK:
+			            data["tag"] = record.ptag;
+			            result.push(data);
+			            break;
+			        default:
+			            console.log("ERR - ", err, key);
+			            break;
+					}
+				});
+			}
+    		return result;
 		});
 	});
 
