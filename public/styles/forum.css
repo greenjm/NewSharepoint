@@ -13,3 +13,7 @@ p {
   margin-right: .6em;
   margin-left: .6em;
 }
+
+.list li {
+	list-style: none;
+}
