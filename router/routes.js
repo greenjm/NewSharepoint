@@ -99,4 +99,13 @@ module.exports = function(app) {
 			}
 		});
 	});
+
+	app.post("/logout", function(req, res) {
+		if (req.cookies.currentUser === undefined) {
+			res.status(400).send("not logged in");
+		} else {
+			res.clearCookie("currentUser");
+			res.status(200).send("Successfully logged out");
+		}
+	});
 }
