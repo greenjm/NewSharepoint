@@ -32,6 +32,9 @@ module.exports = function(app, io) {
 	var bodyParser = require("body-parser");
 	var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
+	// var neo = require('neo4j');
+	// var db = new neo4j.GraphDatabase('http://username:password@137.112.104.134:7473');
+
 
 
 	//Lets connect to our database using the DB server URL.
@@ -47,14 +50,41 @@ module.exports = function(app, io) {
 		date: Date
 	});
 
-	var Post = mongoose.model("Posts", PostSchema);
+	var MsgSchema = new Schema({
+		content: String,
+		sender: String,
+		receiver: String,
+		timestamp: Date
+	});
 
+	var Post = mongoose.model("Posts", PostSchema);
+	var Msg = mongoose.model("Msgs", MsgSchema);
 	//var blah = new Post({
 	//	content: "Stuff"
 	//})
 
 	//blah.save();
+	app.post("/mongo/addMsg", urlencodedParser, function(req,rest) {
+		var newMessage = new Msg({
+			content: req.body.content,
+			sender: req.cookies.currentUser,
+			receiver: req.body.usr,
+			date: new Date()
+		});
+		
+		newMessage.save(function(err, msg) {
+			var returnMsg = new Msg({
+				content: msg.content,
+				sender: msg.sender,
+				receiver: msg.receiver,
+				date: msg.date
+			});
 
+			io.sockets.emit("msg sent", returnMsg);
+			res.status(200).send("You got mail.");
+		})
+	});
+	
 	app.post("/mongo/addPost", urlencodedParser, function(req, res) {
 		//blah.save(function(err){});
 		//Post.find({}, function(err, post) {
