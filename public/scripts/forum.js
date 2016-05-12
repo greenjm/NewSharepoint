@@ -14,7 +14,7 @@ $(document).ready(function() {
           <p>Title: " + post.title + "</p>\
           <p>User: " + post.user + "</p>\
           <p>Body: " + post.content + "</p>\
-          <p>Date Posted: 1 May 2016</p>\
+          <p>Date Posted: " + moment(post.date).format("DD/MM/YYYY") + "</p>\
         </div>";
 	}
 
