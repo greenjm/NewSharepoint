@@ -43,7 +43,8 @@ module.exports = function(app, io) {
 	var PostSchema = new Schema({
 		title: String,
 		content: String,
-		user: String
+		user: String,
+		date: Date
 	});
 
 	var Post = mongoose.model("Posts", PostSchema);
@@ -63,7 +64,8 @@ module.exports = function(app, io) {
 		var newPost = new Post({
 			title: req.body.title,
 			content: req.body.content,
-			user: req.cookies.currentUser
+			user: req.cookies.currentUser,
+			date: new Date()
 		});
 		
 
