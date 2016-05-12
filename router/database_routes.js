@@ -64,7 +64,24 @@ module.exports = function(app, io) {
 	//})
 
 	//blah.save();
-	app.post("/mongo/addMsg", urlencodedParser, function(req,rest) {
+	app.get("/mongo/getMsgs", urlencodedParser, function(req, res) {
+		Msg.find({"$or": [{"$and":[{sender:req.cookies.currentUser},{receiver:req.body.usr}]},{"$and":[{sender:req.body.usr},{receiver:req.cookies.currentUser}]}]}).exec(function(err,msgs) {
+			var result = [];
+			for (var i = 0; i < msgs.length; i++) {
+				var data = {
+					mid: msgs[i]._id,
+					content: msgs[i].content,
+					sender: msgs[i].sender,
+					receiver: msgs[i].receiver,
+					timestamp: msgs[i].timestamp
+				}
+				result.push(data);
+			}
+			res.send(result);
+		})
+	});
+
+	app.post("/mongo/addMsg", urlencodedParser, function(req,res) {
 		var newMessage = new Msg({
 			content: req.body.content,
 			sender: req.cookies.currentUser,
