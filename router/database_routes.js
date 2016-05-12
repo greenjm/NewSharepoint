@@ -131,7 +131,6 @@ module.exports = function(app, io) {
 	app.get("/mongo/getPosts", urlencodedParser, function(req, res) {
 		Post.find().lean().exec(function (err, posts) {
 			var result = [];
-			console.log("post 0 id: " + posts[0]._id);
 
 			for (var i = 0; i < posts.length; i++) {
 				//console.log("data: " + data.title);
