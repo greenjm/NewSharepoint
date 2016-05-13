@@ -33,7 +33,7 @@ module.exports = function(app, io) {
 	var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 	var neo = require('neo4j');
-	var neodb = new neo4j.GraphDatabase('https://137.112.104.134:7473');
+	var neodb = new neo.GraphDatabase('http://137.112.104.134:7474');
 
 	neodb.cypher({
     query: 'MATCH (p:Person {born: {born}}) RETURN p',
@@ -41,12 +41,14 @@ module.exports = function(app, io) {
         born: 1960,
     },
 }, function (err, results) {
-    if (err) throw err;
+    if (err) {
+			console.log(err);
+		}
     var result = results[0];
     if (!result) {
         console.log('No user found.');
     } else {
-        var user = result['u'];
+        var user = result['p'];
         console.log(JSON.stringify(user, null, 4));
     }
 });

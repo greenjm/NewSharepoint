@@ -13,7 +13,7 @@
     "http": "*",
     "cookie-parser": "*",
     "socket.io": "^1.4.5",
-    "neo4j": "*"
+    "neo4j": "~2.0.0-RC2"
   },
   "devDependencies": {},
   "scripts": {
