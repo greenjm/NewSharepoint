@@ -32,10 +32,24 @@ module.exports = function(app, io) {
 	var bodyParser = require("body-parser");
 	var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
-	// var neo = require('neo4j');
-	// var db = new neo4j.GraphDatabase('http://username:password@137.112.104.134:7473');
+	var neo = require('neo4j');
+	var neodb = new neo4j.GraphDatabase('https://137.112.104.134:7473');
 
-
+	neodb.cypher({
+    query: 'MATCH (p:Person {born: {born}}) RETURN p',
+    params: {
+        born: 1960,
+    },
+}, function (err, results) {
+    if (err) throw err;
+    var result = results[0];
+    if (!result) {
+        console.log('No user found.');
+    } else {
+        var user = result['u'];
+        console.log(JSON.stringify(user, null, 4));
+    }
+});
 
 	//Lets connect to our database using the DB server URL.
 	mongoose.connect('mongodb://137.112.40.131:27017/');
@@ -59,11 +73,9 @@ module.exports = function(app, io) {
 
 	var Post = mongoose.model("Posts", PostSchema);
 	var Msg = mongoose.model("Msgs", MsgSchema);
-	//var blah = new Post({
-	//	content: "Stuff"
-	//})
 
-	//blah.save();
+	// app.get("/neo4j/")
+
 	app.get("/mongo/getMsgs", urlencodedParser, function(req, res) {
 		Msg.find({"$or": [{"$and":[{sender:req.cookies.currentUser},{receiver:req.body.usr}]},{"$and":[{sender:req.body.usr},{receiver:req.cookies.currentUser}]}]}).exec(function(err,msgs) {
 			var result = [];
