@@ -4,13 +4,21 @@
       <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <link rel="stylesheet" href="./styles/message.css">
+
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+  <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="https://cdn.tinymce.com/4/tinymce.min.js"></script>
+  <script type="text/javascript" src="./scripts/header.js"></script>
+  <script type="text/javascript" src="./scripts/plugins/moment.min.js"></script>
+  <script type="text/javascript" src="./scripts/plugins/jquery.cookie.js"></script>
+  <script type="text/javascript" src="./scripts/message.js"></script>
 
 
   </head>
-<div id="header"></div>
-<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>
+<body>
+  <div id="header"></div>
 
   <!-- Modal -->
   <div class="modal fade" id="myModal" role="dialog">
@@ -20,18 +28,40 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Modal Header</h4>
+          <h4 class="modal-title">New Message</h4>
         </div>
         <div class="modal-body">
-          <p>Some text in the modal.</p>
+          <div class="input-group">
+            <span class="input-group-addon" id="message-to-addon">To</span>
+            <input id="message-to" type="text" class="form-control" placeholder="Username" aria-describedby="message-to-addon">
+          </div>
+          <br />
+          <textarea id="message-new"></textarea>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" id="message-cancel-button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" id="message-send-button" class="btn btn-default">Send</button>
         </div>
       </div>
       
     </div>
   </div>
+
+  <div id="left-panel">
+    <ul id="user-conversations-list" class="list-group">
+      <button type="button" id="new-message-button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">New Message</button>
+      <li class="list-group-item user-conversations-list-item"><h4 class="user-conversations-name">User 1</h4><p><small>Last message: 5/12/2016</small></p></li>
+      <li class="list-group-item user-conversations-list-item"><h4 class="user-conversations-name">User 2</h4><p><small>Last message: <span class="user-conversations-last-date">5/12/2016</span></small></p></li>
+    </ul>
+  </div>
+
+  <div id="right-panel">
+    <h2>Conversation with <span id="message-header"></span></h2>
+    <ul id="message-list" class="list-group">
+    </ul>
+    <!-- <textarea id="message-reply"></textarea> -->
+    <button type="button" id="message-reply-button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Reply</button>
+  </div>
   
-</div>
+</body>
 </html>

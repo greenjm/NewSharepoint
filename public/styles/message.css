@@ -1,3 +1,7 @@
+body {
+	height: 100%;
+}
+
 .modal-body .form-horizontal .col-sm-2,
 .modal-body .form-horizontal .col-sm-10 {
     width: 100%
@@ -8,4 +12,70 @@
 }
 .modal-body .form-horizontal .col-sm-offset-2 {
     margin-left: 15px;
+}
+
+#left-panel {
+	box-shadow: 2px 0px 1px grey;
+	background-color: #F7F7F7;
+	position: absolute;
+	width: 250px;
+	top: 52px;
+	bottom: 0px;
+	left: 0px;
+	overflow-x: hidden;
+	overflow-y: scroll;
+	height: auto;
+	display: flex;
+	flex-direction: column;
+}
+
+#user-conversations-list {
+	padding-top: 2px;
+	text-align: center;
+}
+
+.user-conversations-list-item {
+	text-align: left;
+	margin-top: 1px;
+	margin-bottom: 1px;
+}
+
+.user-conversations-list-item:hover {
+	cursor: pointer;
+}
+
+.user-conversations-name {
+	font-weight: bold;
+}
+
+#right-panel {
+	position: absolute;
+	top: 75px;
+	bottom: 0px;
+	left: 325px;
+	width: 75%;
+	overflow: hidden;
+	height: auto;
+	display: flex;
+	flex-direction: column;
+}
+
+#message-list {
+	overflow-x: hidden;
+	overflow-y: scroll;
+}
+
+small {
+	color: grey;
+}
+
+#new-message-button {
+	text-align: center;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+#message-reply-button {
+	margin-top: 5px;
+	width: 100px;
 }

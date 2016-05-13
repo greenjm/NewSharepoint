@@ -112,8 +112,8 @@ module.exports = function(app, io) {
 			});
 
 			io.sockets.emit("msg sent", returnMsg);
-			res.status(200).send("You got mail.");
-		})
+			res.send("You got mail");
+		});
 	});
 	
 	app.post("/mongo/addPost", urlencodedParser, function(req, res) {
