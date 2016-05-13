@@ -3,6 +3,8 @@ module.exports = function(app) {
 	var bodyParser = require("body-parser");
 	var cookieParser = require("cookie-parser");
 	var ref = new Firebase("https://newsharepoint.firebaseio.com/");
+	var neo = require('neo4j');
+	var neodb = new neo.GraphDatabase('http://137.112.104.134:7474');
 
 	var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
@@ -76,6 +78,22 @@ module.exports = function(app) {
 			if (error) {
     			res.status(400).send(error);
   			} else {
+  				neodb.cypher({
+  					query: "MATCH (u:User {username: {username}}) RETURN u",
+  					params: {
+  						username: authData.password.email
+  					}
+  				}, function(err, results) {
+  					if (err) {
+  						console.log("Neo4j error: " + err);
+  					}
+  					else {
+  						var result = results[0];
+  						if (!result) {
+  							addUser(authData.password.email);
+  						}
+  					}
+  				});
   				res.cookie("currentUser", authData.password.email).send("set current user");
   			}
 		});
@@ -108,4 +126,20 @@ module.exports = function(app) {
 			res.status(200).send("Successfully logged out");
 		}
 	});
+
+	// HELPERS
+	var addUser = function(email) {
+		neodb.cypher({
+			query: "CREATE (u:User {username: {username}})",
+			params: {
+				username: email
+			}
+		}, function(err, results) {
+			if (err) {
+				console.log("AddUser error: " + err);
+			} else {
+				console.log("Added");
+			}
+		});
+	}
 }

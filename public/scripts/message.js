@@ -1,7 +1,6 @@
 $(document).ready(function() {
 
 	$("#right-panel").hide();
-	console.log("currentUser: " + $.cookie("currentUser"));
 
 	//tinymce.init({
     //	selector: '#message-reply'
@@ -46,7 +45,6 @@ $(document).ready(function() {
     	var socket = io();
 
     	socket.on("msg sent", function(msg) {
-    		console.log("SOCKET IO");
     		if (msg.sender !== $.cookie("currentUser") && msg.receiver !== $.cookie("currentUser")) {
     			return;
     		}
@@ -59,35 +57,70 @@ $(document).ready(function() {
     		$(".user-conversations-list-item").each(function(i, el) {
     			if ($(el).find(".user-conversations-name").html() === msg.sender || $(el).find(".user-conversations-name").html() === msg.receiver) {
     				updateConversationInfo(el, msg);
+    				conversationFound = true;
     			}
     		});
+    		if (!conversationFound) {
+    			populateConversations();
+    		}
     	});
     }
 
     var populateMessages = function(username) {
     	console.log("TODO. username: " + username);
+    	$.ajax({
+    		url: '/mongo/getMsgs?username=' + username,
+    		type: 'GET',
+    		dataType: 'json',
+    		success: function(messages) {
+    			for (var i = 0; i < messages.length; i++) {
+    				var message = messages[i];
+    				var html = templateMessage(message);
+    				$("#message-list").prepend(html);
+    			}
+    		},
+    		error: function(data) {
+    			console.log("ERROR: " + data);
+    		}
+    	});
     }
 
     var populateConversations = function() {
-    	console.log("TODO");
+    	$("#user-conversations-list li").remove();
+    	$.ajax({
+    		url: '/neo4j/getConversations',
+    		type: 'GET',
+    		dataType: 'json',
+    		success: function(conversations) {
+    			console.log("Success: " + JSON.stringify(conversations));
+    			for (var i = 0; i < conversations.length; i++) {
+    				var conversation = conversations[i];
+    				var html = templateConversation(conversation);
+    				$("#user-conversations-list").append(html);
+    			}
+    		},
+    		error: function(data) {
+    			console.log("ERROR: " + data);
+    		}
+    	})
     }
 
     var templateMessage = function(msg) {
     	return "<li class='list-group-item'>\
-        			<h4 class='message-sender-name'>" + msg.sender + "</h4>\
+        			<h4 class='message-sender-name'>From: " + msg.sender + "</h4>\
         			<p>" + msg.content + "</p>\
-        			<p><small>Received: " + moment(msg.date).format("MM/DD/YYYY") + "</small></p>\
+        			<p><small>Received: " + moment(msg.timestamp).format("MM/DD/YYYY") + "</small></p>\
       			</li>";
     }
 
-    var templateConversation = function(user) {
+    var templateConversation = function(conversation) {
     	return "<li class='list-group-item user-conversations-list-item'>\
-    				<h4 class='user-conversations-name'>" + user.name + "</h4>\
-    				<p><small>Last message: <span class='user-conversation-last-date'>5/12/2016</span></small></p></li>";
+    				<h4 class='user-conversations-name'>" + conversation["r.username"] + "</h4>\
+    				<p><small>Last message: <span class='user-conversation-last-date'>" + moment(conversation["t.date"]).format("MM/DD/YYYY") + "</span></small></p></li>";
     }
 
     var updateConversationInfo = function(el, msg) {
-    	$(el).find(".user-conversations-last-date").html(moment(msg.date).format("MM/DD/YYYY"));
+    	$(el).find(".user-conversations-last-date").html(moment(msg.timestamp).format("MM/DD/YYYY"));
     }
 
     var sendMessage = function(receiver, content) {
@@ -105,7 +138,8 @@ $(document).ready(function() {
     			$("#message-cancel-button").trigger("click");
     		},
     		error: function(data) {
-    			console.log("ERROR: " + data);
+    			console.log("ERROR: message not sent");
+    			$("#message-cancel-button").trigger("click");
     		}
     	});
     	

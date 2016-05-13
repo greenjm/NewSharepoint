@@ -35,24 +35,6 @@ module.exports = function(app, io) {
 	var neo = require('neo4j');
 	var neodb = new neo.GraphDatabase('http://137.112.104.134:7474');
 
-	neodb.cypher({
-    query: 'MATCH (p:Person {born: {born}}) RETURN p',
-    params: {
-        born: 1960,
-    },
-}, function (err, results) {
-    if (err) {
-			console.log(err);
-		}
-    var result = results[0];
-    if (!result) {
-        console.log('No user found.');
-    } else {
-        var user = result['p'];
-        console.log(JSON.stringify(user, null, 4));
-    }
-});
-
 	//Lets connect to our database using the DB server URL.
 	mongoose.connect('mongodb://137.112.40.131:27017/');
 
@@ -78,8 +60,24 @@ module.exports = function(app, io) {
 
 	// app.get("/neo4j/")
 
+	app.get("/neo4j/getConversations", function(req, res) {
+		neodb.cypher({
+			query: "MATCH (:User {username: {me}})-[t:TALKING_TO]->(r:User) RETURN t.date,r.username",
+			params: {
+				me: req.cookies.currentUser
+			}
+		}, function(err, results) {
+			if (err) {
+				console.log("Err: " + err);
+				res.status(400).send("ERROR");
+			} else {
+				res.status(200).send(results);
+			}
+		});
+	});
+
 	app.get("/mongo/getMsgs", urlencodedParser, function(req, res) {
-		Msg.find({"$or": [{"$and":[{sender:req.cookies.currentUser},{receiver:req.body.usr}]},{"$and":[{sender:req.body.usr},{receiver:req.cookies.currentUser}]}]}).exec(function(err,msgs) {
+		Msg.find({"$or": [{"$and":[{sender:req.cookies.currentUser},{receiver:req.query.username}]},{"$and":[{sender:req.query.username},{receiver:req.cookies.currentUser}]}]}).exec(function(err,msgs) {
 			var result = [];
 			for (var i = 0; i < msgs.length; i++) {
 				var data = {
@@ -92,27 +90,45 @@ module.exports = function(app, io) {
 				result.push(data);
 			}
 			res.send(result);
-		})
+		});
 	});
 
 	app.post("/mongo/addMsg", urlencodedParser, function(req,res) {
-		var newMessage = new Msg({
-			content: req.body.content,
-			sender: req.cookies.currentUser,
-			receiver: req.body.usr,
-			date: new Date()
-		});
-		
-		newMessage.save(function(err, msg) {
-			var returnMsg = new Msg({
-				content: msg.content,
-				sender: msg.sender,
-				receiver: msg.receiver,
-				date: msg.date
-			});
+		neodb.cypher({
+			query: "MATCH (sender:User {username: {senderU}}),(receiver:User {username: {receiverU}}) RETURN sender,receiver",
+			params: {
+				senderU: req.cookies.currentUser,
+				receiverU: req.body.usr
+			}
+		}, function(err, results) {
+			if (err) {
+				console.log("Err: " + err);
+			} else {
+				var result = results[0];
+				if (result === undefined) {
+					res.status(400).send("Bad users");
+				} else {
+					var newMessage = new Msg({
+						content: req.body.content,
+						sender: req.cookies.currentUser,
+						receiver: req.body.usr,
+						timestamp: new Date()
+					});
+					
+					newMessage.save(function(err, msg) {
+						var returnMsg = new Msg({
+							content: msg.content,
+							sender: msg.sender,
+							receiver: msg.receiver,
+							timestamp: msg.timestamp
+						});
 
-			io.sockets.emit("msg sent", returnMsg);
-			res.send("You got mail");
+						addOrUpdateConversation(msg, returnMsg);
+
+						res.send("You got mail");
+					});
+				}
+			}
 		});
 	});
 	
@@ -203,5 +219,52 @@ module.exports = function(app, io) {
 		});
 	});
 
-	//});
+	// HELPERS
+	var addOrUpdateConversation = function(msg, returnMsg) {
+		var dateString = msg.timestamp.getTime();
+		neodb.cypher({
+			query: "MATCH (a:User {username: {aUser}})-[:TALKING_TO]-(b:User {username: {bUser}}) RETURN a,b",
+			params: {
+				aUser: msg.sender,
+				bUser: msg.receiver
+			}
+		}, function(err, results) {
+			if (err) {
+				console.log("Error: " + err);
+			} else {
+				var r = results[0];
+				if (r === undefined) {
+					neodb.cypher({
+						query: "MATCH (a:User {username: {sender}}),(b:User {username: {receiver}})\
+								CREATE (a)-[:TALKING_TO {date: {date}}]->(b)\
+								CREATE (b)-[:TALKING_TO {date: {date}}]->(a)",
+						params: {
+							sender: msg.sender,
+							receiver: msg.receiver,
+							date: dateString
+						}
+					}, function(err, results) {
+						if (err) {
+							console.log("Error creating new relations: " + err);
+						}
+						io.sockets.emit("msg sent", returnMsg);
+					});
+				} else {
+					neodb.cypher({
+						query: "MATCH (:User {username: {sender}})-[t:TALKING_TO]-(:User {username: {receiver}}) SET t.date = {date}",
+						params: {
+							sender: msg.sender,
+							receiver: msg.receiver,
+							date: dateString
+						}
+					}, function(err, results) {
+						if (err) {
+							console.log("Error: " + err);
+						}
+						io.sockets.emit("msg sent", returnMsg);
+					});
+				}
+			}
+		});
+	}
 }
