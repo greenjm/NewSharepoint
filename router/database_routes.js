@@ -1,6 +1,10 @@
 module.exports = function(app, io) {
 
+	var nodemailer = require("nodemailer");
 	var aerospike = require("aerospike");
+
+	var transporter = nodemailer.createTransport("smtps://newsharepoint1%40gmail.com:thisisapassword@smtp.gmail.com");
+
 	var client = aerospike.client({
 	  hosts: [
 	      { addr: "137.112.40.132", port: 3000 }
@@ -61,6 +65,9 @@ module.exports = function(app, io) {
 	// app.get("/neo4j/")
 
 	app.get("/neo4j/getConversations", function(req, res) {
+		if (req.cookies.currentUser === undefined) {
+			res.status(400).send("Not logged in");
+		}
 		neodb.cypher({
 			query: "MATCH (:User {username: {me}})-[t:TALKING_TO]->(r:User) RETURN t.date,r.username",
 			params: {
@@ -76,7 +83,29 @@ module.exports = function(app, io) {
 		});
 	});
 
+	app.get("/neo4j/getPrefs", function(req, res) {
+		if (req.cookies.currentUser === undefined) {
+			res.status(400).send("Not logged in");
+		}
+		neodb.cypher({
+			query: "MATCH (:User {username: {me}})-[:NOTIFY_ON]->(t:Tag) RETURN t.type AS type",
+			params: {
+				me: req.cookies.currentUser
+			}
+		}, function(err, results) {
+			if (err) {
+				console.log("ERROR: " + err);
+				res.status(400).send(err);
+			} else {
+				res.status(200).send(results);
+			}
+		});
+	});
+
 	app.get("/mongo/getMsgs", urlencodedParser, function(req, res) {
+		if (req.cookies.currentUser === undefined) {
+			res.status(400).send("Not logged in");
+		}
 		Msg.find({"$or": [{"$and":[{sender:req.cookies.currentUser},{receiver:req.query.username}]},{"$and":[{sender:req.query.username},{receiver:req.cookies.currentUser}]}]}).exec(function(err,msgs) {
 			var result = [];
 			for (var i = 0; i < msgs.length; i++) {
@@ -93,7 +122,44 @@ module.exports = function(app, io) {
 		});
 	});
 
+	app.post("/neo4j/setPrefs", urlencodedParser, function(req, res) {
+		if (req.cookies.currentUser === undefined) {
+			res.status(400).send("Not logged in");
+		}
+		var tags = JSON.parse(req.body.tags);
+		neodb.cypher({
+			query: "MATCH (:User {username: {me}})-[:NOTIFY_ON]->(t:Tag) DETCH DELETE t",
+			params: {
+				me: req.cookies.currentUser
+			}
+		}, function(err, results) {
+			if (err) {
+				console.log("Error: " + err);
+				res.status(400).send(err);
+			}
+		});
+		for (var i = 0; i < tags.length; i++) {
+			var tag = tags[i];
+			neodb.cypher({
+				query: "MATCH (u:User {username: {me}}) CREATE (u)-[:NOTIFY_ON]->(:Tag {type: {tag}})",
+				params: {
+					me: req.cookies.currentUser,
+					tag: tag
+				}
+			}, function(err, results) {
+				if (err) {
+					console.log("Error: " + err);
+					res.status(400).send(err);
+				}
+			});
+		}
+		res.status(200).send("Updated preferences");
+	});
+
 	app.post("/mongo/addMsg", urlencodedParser, function(req,res) {
+		if (req.cookies.currentUser === undefined) {
+			res.status(400).send("Not logged in");
+		}
 		neodb.cypher({
 			query: "MATCH (sender:User {username: {senderU}}),(receiver:User {username: {receiverU}}) RETURN sender,receiver",
 			params: {
@@ -133,11 +199,10 @@ module.exports = function(app, io) {
 	});
 	
 	app.post("/mongo/addPost", urlencodedParser, function(req, res) {
-		//blah.save(function(err){});
-		//Post.find({}, function(err, post) {
-		//	console.log(req.body.title);
-		//	console.log(req.body.content);
-		//	console.log(req.body.tag);
+		if (req.cookies.currentUser === undefined) {
+			res.status(400).send("Not logged in");
+		}
+
 		var newPost = new Post({
 			title: req.body.title,
 			content: req.body.content,
@@ -145,8 +210,6 @@ module.exports = function(app, io) {
 			date: new Date()
 		});
 		
-
-
 		newPost.save(function (err, post) {
 			var returnPost = new Post({
 				pid: post.id,
@@ -165,13 +228,14 @@ module.exports = function(app, io) {
 				ptag:   req.body.tag
 			};
 
+			sendNewPostEmails(rec, req);
+
 			client.put(key, rec, function(err) {
 				// Check for err.code in the callback function.
 				// AEROSPIKE_OK signifies the success of put operation.
 				if ( err.code !== aerospike.status.AEROSPIKE_OK ) {
 					console.log("error: %s", err.message);
 				} else {
-					console.log("PUT WORKED: " + aerospike.status);
 					io.sockets.emit("post added", returnPost);
 					res.send("Complete");
 				}
@@ -208,6 +272,9 @@ module.exports = function(app, io) {
 	}
 
 	app.get("/mongo/getPosts", urlencodedParser, function(req, res) {
+		if (req.cookies.currentUser === undefined) {
+			res.status(400).send("Not logged in");
+		}
 		Post.find().lean().exec(function (err, posts) {
 			var result = [];
 
@@ -264,6 +331,39 @@ module.exports = function(app, io) {
 						io.sockets.emit("msg sent", returnMsg);
 					});
 				}
+			}
+		});
+	}
+
+	var sendNewPostEmails = function(rec, req) {
+		neodb.cypher({
+			query: "MATCH (u:User)-[:NOTIFY_ON]->(:Tag {type: {type}}) WHERE u.username <> {me} RETURN u.username AS email",
+			params: {
+				type: rec.ptag,
+				me: req.cookies.currentUser
+			}
+		}, function(err, results) {
+			if (err) {
+				console.log(err);
+				return;
+			}
+			for (var i = 0; i < results.length; i++) {
+				var result = results[i];
+				var mailData = {
+					from: '"New Sharepoint" <newsharepoint1@gmail.com>',
+					to: result["email"],
+					subject: "New Post on NewSharepoint",
+					text: "A new post with the tag " + rec.ptag + " has been posted. Go check it out!",
+					html: "A new post with the tag " + rec.ptag + " has been posted. Go check it out!"
+				};
+
+				transporter.sendMail(mailData, function(error, info) {
+					if (error) {
+						console.log("Error sending mail: " + error);
+						return;
+					}
+					console.log("message sent: " + info.response);
+				});
 			}
 		});
 	}

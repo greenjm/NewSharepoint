@@ -29,7 +29,7 @@ $(document).ready(function() {
 			var post = {
 				title: $title.val(),
 				content: tempContents,
-        tag: ptag_value
+        		tag: ptag_value
 			};
 			
 			if (tempContents != "" || post.title != "") {

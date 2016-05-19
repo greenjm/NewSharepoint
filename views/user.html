@@ -28,35 +28,39 @@ th, td {
 			<h1 id="user-email"></h1>
 		</div>
 
-		<form action="demo_form.asp" method="get">
-
-		<table style="width:75%" align="center" class="table table-bordered">
-  		<tr>
-    		<th>Your Items for Sale</th>	
-  		</tr>
-  		<tr>
-    		<td>This will be populated using db</td>
-  		</tr>
-		</table>
-
   		<table style="width:75%" align="center" class="table table-bordered">
   		<tr>
     		<th>Application Settings</th>
     		<th>Preferences</th>		
   		</tr>
   		<tr>
-    		<td>Buyer Found Notifications</td>
-    		<td><input type="checkbox" name="buyerNotifications" value="Bike"></input></td>
+    		<td>New Buy Post</td>
+    		<td><input type="checkbox" name="buyerNotifications" value="buy"></input></td>
   		</tr>
   		<tr>
-    		<td>Bid Notifications</td>
-    		<td><input type="checkbox" name="bidNotifications" value="Bike"></input></td>
+    		<td>New Sell Post</td>
+    		<td><input type="checkbox" name="bidNotifications" value="sell"></input></td>
   		</tr>
   		<tr>
-    		<td>Seller Notifications</td>
-    		<td><input type="checkbox" name="sellerNotifications" value="Bike"></input></td>
+    		<td>New Looking for Ride Post</td>
+    		<td><input type="checkbox" name="sellerNotifications" value="lfr"></input></td>
   		</tr>
+      <tr>
+        <td>New Offering Ride Post</td>
+        <td><input type="checkbox" name="sellerNotifications" value="ofr"></input></td>
+      </tr>
+      <tr>
+        <td>New Lost and Found Post</td>
+        <td><input type="checkbox" name="sellerNotifications" value="laf"></input></td>
+      </tr>
+      <tr>
+        <td>New Miscellaneous Post</td>
+        <td><input type="checkbox" name="sellerNotifications" value="misc"></input></td>
+      </tr>
 		</table>
+    <div id="buttonContainer" style="width: 75%; position: relative; margin-left: auto; margin-right: auto;">
+      <button type="button" style="position: absolute; right: 0px;" id="savePrefs" class="btn btn-info btn-lg">Save Preferences</button>
+    </div>
 		
 	</body>
 </html>

@@ -22,7 +22,6 @@ $(document).ready(function() {
 		for (var i = 0; i < posts.length; i++) {
 			var post = posts[i];
 			var html = templatePost(post);
-			console.log("html: " + html);
 			$(".cd-gallery ul").mixItUp("append", $(html));
 		}
 	}
