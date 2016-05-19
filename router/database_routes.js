@@ -336,6 +336,7 @@ module.exports = function(app, io) {
 	}
 
 	var sendNewPostEmails = function(rec, req) {
+		console.log("title: " + req.body.title);
 		neodb.cypher({
 			query: "MATCH (u:User)-[:NOTIFY_ON]->(:Tag {type: {type}}) WHERE u.username <> {me} RETURN u.username AS email",
 			params: {
@@ -353,8 +354,8 @@ module.exports = function(app, io) {
 					from: '"New Sharepoint" <newsharepoint1@gmail.com>',
 					to: result["email"],
 					subject: "New Post on NewSharepoint",
-					text: "A new post with the tag " + rec.ptag + " has been posted. Go check it out!",
-					html: "A new post with the tag " + rec.ptag + " has been posted. Go check it out!"
+					text: newPostEmailText(req),
+					html: newPostEmailHtml(req)
 				};
 
 				transporter.sendMail(mailData, function(error, info) {
@@ -366,5 +367,24 @@ module.exports = function(app, io) {
 				});
 			}
 		});
+	}
+
+	var newPostEmailText = function(req) {
+		return "Greetings,\
+					A new post with the tag " + req.body.tag + " has been posted:\
+					Title: " + req.body.title + "\
+					Content: " + req.body.content;
+	}
+
+	var newPostEmailHtml = function(req) {
+		return "<p>Greetings,</p>\
+				<br />\
+				<p>A new post with the tag " + req.body.tag + " has been posted:</p>\
+				<br />\
+				<p>Title: " + req.body.title + "</p>\
+				<p>Content: " + req.body.content + "</p>\
+				<br />\
+				<br />\
+				<p>Click <a href='http://localhost:5000/forum'>here</a> to view.</p>";
 	}
 }
