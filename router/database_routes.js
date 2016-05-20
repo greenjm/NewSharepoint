@@ -160,42 +160,46 @@ module.exports = function(app, io) {
 		if (req.cookies.currentUser === undefined) {
 			res.status(400).send("Not logged in");
 		}
-		neodb.cypher({
-			query: "MATCH (sender:User {username: {senderU}}),(receiver:User {username: {receiverU}}) RETURN sender,receiver",
-			params: {
-				senderU: req.cookies.currentUser,
-				receiverU: req.body.usr
-			}
-		}, function(err, results) {
-			if (err) {
-				console.log("Err: " + err);
-			} else {
-				var result = results[0];
-				if (result === undefined) {
-					res.status(400).send("Bad users");
-				} else {
-					var newMessage = new Msg({
-						content: req.body.content,
-						sender: req.cookies.currentUser,
-						receiver: req.body.usr,
-						timestamp: new Date()
-					});
-					
-					newMessage.save(function(err, msg) {
-						var returnMsg = new Msg({
-							content: msg.content,
-							sender: msg.sender,
-							receiver: msg.receiver,
-							timestamp: msg.timestamp
-						});
-
-						addOrUpdateConversation(msg, returnMsg);
-
-						res.send("You got mail");
-					});
+		if (req.cookies.currentUser == req.body.usr) {
+			res.status(400).send("Cannot send messages to yourself");
+		} else {
+			neodb.cypher({
+				query: "MATCH (sender:User {username: {senderU}}),(receiver:User {username: {receiverU}}) RETURN sender,receiver",
+				params: {
+					senderU: req.cookies.currentUser,
+					receiverU: req.body.usr
 				}
-			}
-		});
+			}, function(err, results) {
+				if (err) {
+					console.log("Err: " + err);
+				} else {
+					var result = results[0];
+					if (result === undefined) {
+						res.status(400).send("Bad users");
+					} else {
+						var newMessage = new Msg({
+							content: req.body.content,
+							sender: req.cookies.currentUser,
+							receiver: req.body.usr,
+							timestamp: new Date()
+						});
+						
+						newMessage.save(function(err, msg) {
+							var returnMsg = new Msg({
+								content: msg.content,
+								sender: msg.sender,
+								receiver: msg.receiver,
+								timestamp: msg.timestamp
+							});
+
+							addOrUpdateConversation(msg, returnMsg);
+
+							res.send("You got mail");
+						});
+					}
+				}
+			});
+		}
 	});
 	
 	app.post("/mongo/addPost", urlencodedParser, function(req, res) {

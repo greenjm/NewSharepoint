@@ -135,8 +135,7 @@ $(document).ready(function() {
     			$("#message-cancel-button").trigger("click");
     		},
     		error: function(data) {
-    			console.log("ERROR: message not sent");
-    			$("#message-cancel-button").trigger("click");
+    			alert("ERROR: message not sent");
     		}
     	});
     	
