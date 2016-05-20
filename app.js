@@ -13,7 +13,7 @@ app.set("view engine", "ejs");
 app.engine("html", require("ejs").renderFile);
 
 var server = http.Server(app);
-server.listen(process.env.PORT, "0.0.0.0", function() {
+server.listen(5000, function() {
 	console.log("Now listening on port 5000. Visit 'localhost:5000' in a browser to view the site.");
 });
 
