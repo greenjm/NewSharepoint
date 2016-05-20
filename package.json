@@ -29,5 +29,6 @@
   "bugs": {
     "url": "https://github.com/greenjm/NewSharepoint/issues"
   },
-  "homepage": "https://github.com/greenjm/NewSharepoint#readme"
+  "homepage": "https://github.com/greenjm/NewSharepoint#readme",
+  "scripts": { "start": "node app.js" }
 }
