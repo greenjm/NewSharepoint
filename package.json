@@ -4,17 +4,17 @@
   "description": "CS433 project",
   "main": "app.js",
   "dependencies": {
-    "mongoose": "*",
-    "aerospike": "^1.0.7",
-    "body-parser": "^1.15.0",
-    "ejs": "~1.0.0",
-    "express": "~4.0.0",
-    "firebase": "*",
-    "http": "*",
-    "cookie-parser": "*",
-    "socket.io": "^1.4.5",
-    "neo4j": "~2.0.0-RC2",
-    "nodemailer": "*"
+    "mongoose": "4.4.17",
+    "aerospike": "1.0.57",
+    "body-parser": "1.15.1",
+    "ejs": "1.0.0",
+    "express": "4.0.0",
+    "firebase": "2.4.2",
+    "http": "0.0.0",
+    "cookie-parser": "1.4.1",
+    "socket.io": "1.4.6",
+    "neo4j": "2.0.0-RC2",
+    "nodemailer": "2.4.1"
   },
   "devDependencies": {},
   "scripts": {
