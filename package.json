@@ -32,7 +32,7 @@
   "homepage": "https://github.com/greenjm/NewSharepoint#readme",
   "scripts": { "start": "node ./app.js" },
   "engines": {
-    "node": "4.4.x",
-    "npm": "2.15.x"
+    "node": "4.4.3",
+    "npm": "2.15.1"
   }
 }
