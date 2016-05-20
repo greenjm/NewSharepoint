@@ -128,7 +128,7 @@ module.exports = function(app, io) {
 		}
 		var tags = JSON.parse(req.body.tags);
 		neodb.cypher({
-			query: "MATCH (:User {username: {me}})-[:NOTIFY_ON]->(t:Tag) DETCH DELETE t",
+			query: "MATCH (:User {username: {me}})-[:NOTIFY_ON]->(t:Tag) DETACH DELETE t",
 			params: {
 				me: req.cookies.currentUser
 			}

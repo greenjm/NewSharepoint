@@ -29,7 +29,7 @@ $(document).ready(function() {
     		var receiver = $("#message-to").val();
     		var content = tinymce.activeEditor.getContent();
     		if (receiver === "" || content === "") {
-    			console.log("bad values");
+    			alert("bad values");
     			return;
     		}
     		sendMessage(receiver, content);
@@ -67,7 +67,6 @@ $(document).ready(function() {
     }
 
     var populateMessages = function(username) {
-    	console.log("TODO. username: " + username);
     	$.ajax({
     		url: '/mongo/getMsgs?username=' + username,
     		type: 'GET',
@@ -92,7 +91,6 @@ $(document).ready(function() {
     		type: 'GET',
     		dataType: 'json',
     		success: function(conversations) {
-    			console.log("Success: " + JSON.stringify(conversations));
     			for (var i = 0; i < conversations.length; i++) {
     				var conversation = conversations[i];
     				var html = templateConversation(conversation);
@@ -134,7 +132,6 @@ $(document).ready(function() {
     		type: 'POST',
     		data: data,
     		success: function(data) {
-    			console.log("SUCCESS: " + data);
     			$("#message-cancel-button").trigger("click");
     		},
     		error: function(data) {

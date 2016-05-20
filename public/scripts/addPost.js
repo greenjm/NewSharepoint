@@ -32,7 +32,7 @@ $(document).ready(function() {
         		tag: ptag_value
 			};
 			
-			if (tempContents != "" || post.title != "") {
+			if (tempContents != "" && post.title != "") {
 				$.ajax({
 					url: '/mongo/addPost',
 					type: 'POST',
